@@ -6,8 +6,9 @@ use crate::{
 use bstr::B;
 use codec::{Decode, Encode};
 use ethereum_types::H256;
-use frame_support::{assert_noop, assert_ok, traits::Get, BoundedVec};
+use frame_support::{assert_noop, assert_ok, traits::Get, weights::{GetDispatchInfo, Pays}, BoundedVec};
 use frame_system::RawOrigin;
+use pallet_transaction_payment;
 
 use sp_core::Pair;
 use sp_runtime::{
@@ -2247,5 +2248,45 @@ fn exempt_should_succeed() {
 			event,
 			crate::mock::Event::Creditcoin(crate::Event::LoanExempted(deal_order_id, transfer_id))
 		);
+	});
+}
+
+#[test]
+fn exempt_weight_should_be_001_or_greater() {
+	ExtBuilder::default().build_and_execute(|| {
+                let tip = 1;
+		System::set_block_number(tip);
+
+		let test_info = TestInfo::new_defaults();
+		let (deal_order, deal_order_id) = test_info.create_deal_order();
+
+		//  insert as exemption to bypass transfer verification
+		let tx_hash = "0".as_bytes().into_bounded();
+		let contract = "0x0ad1439a0e0bfdcd49939f9722866651a4aa9b3c".as_bytes().into_bounded();
+
+		assert_ok!(Creditcoin::register_transfer(
+			Origin::signed(test_info.lender.account_id.clone()),
+			TransferKind::Ethless(contract.clone()),
+			0u64.into(),
+			OrderId::Deal(deal_order_id.clone()),
+			tx_hash.clone()
+		));
+
+		let transfer_id = TransferId::new::<Test>(&deal_order.blockchain, &tx_hash.clone());
+
+		let call = Call::Creditcoin(crate::Call::exempt {
+			deal_order_id: deal_order_id.clone(),
+			transfer_id: transfer_id.clone(),
+		});
+
+		let call_info = call.get_dispatch_info();
+log::debug!("***** DispatchInfo={:?}", call_info);
+		assert_gt!(call_info.weight, 0);
+                assert_eq!(call_info.pays_fee, Pays::Yes);
+
+                // len = 0??? what is that
+//todo: how do I import this ?
+                let fee = pallet_transaction_payment::pallet::Pallet::<Test>::compute_fee(0, &call_info, tip);
+log::debug!("++++++ fee={:?}", fee);
 	});
 }

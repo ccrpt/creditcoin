@@ -3,6 +3,10 @@
 
 extern crate alloc;
 
+#[cfg(test)]
+#[macro_use]
+extern crate more_asserts;
+
 pub use pallet::*;
 use sp_runtime::KeyTypeId;
 use sp_std::prelude::*;
