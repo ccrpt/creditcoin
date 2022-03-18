@@ -6,9 +6,13 @@ use crate::{
 use bstr::B;
 use codec::{Decode, Encode};
 use ethereum_types::H256;
-use frame_support::{assert_noop, assert_ok, traits::Get, weights::{GetDispatchInfo, Pays}, BoundedVec};
+use frame_support::{
+	assert_noop, assert_ok,
+	traits::Get,
+	weights::{GetDispatchInfo, Pays},
+	BoundedVec,
+};
 use frame_system::RawOrigin;
-use pallet_transaction_payment;
 
 use sp_core::Pair;
 use sp_runtime::{
@@ -2243,6 +2247,14 @@ fn exempt_should_succeed() {
 
 		// assert events in reversed order
 		let mut all_events = <frame_system::Pallet<Test>>::events();
+
+
+		log::debug!("===== ALL EVENTS={:?}", all_events.len());
+		for ev in all_events.iter() {
+			log::debug!("==== event={:?}", ev.event);
+		}
+
+
 		let event = all_events.pop().expect("Expected at least one EventRecord to be found").event;
 		assert_eq!(
 			event,
@@ -2254,7 +2266,7 @@ fn exempt_should_succeed() {
 #[test]
 fn exempt_weight_should_be_001_or_greater() {
 	ExtBuilder::default().build_and_execute(|| {
-                let tip = 1;
+		let tip = 1;
 		System::set_block_number(tip);
 
 		let test_info = TestInfo::new_defaults();
@@ -2280,13 +2292,13 @@ fn exempt_weight_should_be_001_or_greater() {
 		});
 
 		let call_info = call.get_dispatch_info();
-log::debug!("***** DispatchInfo={:?}", call_info);
+		log::debug!("***** DispatchInfo={:?}", call_info);
 		assert_gt!(call_info.weight, 0);
-                assert_eq!(call_info.pays_fee, Pays::Yes);
+		assert_eq!(call_info.pays_fee, Pays::Yes);
 
-                // len = 0??? what is that
-//todo: how do I import this ?
-                let fee = pallet_transaction_payment::pallet::Pallet::<Test>::compute_fee(0, &call_info, tip);
-log::debug!("++++++ fee={:?}", fee);
+		// len = 0??? what is that
+		//todo: how do I import this ?
+		//                let fee = pallet_transaction_payment::pallet::Pallet::<Test>::compute_fee(0, &call_info, tip);
+		//log::debug!("++++++ fee={:?}", fee);
 	});
 }
