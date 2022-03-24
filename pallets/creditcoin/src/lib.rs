@@ -10,11 +10,9 @@ use sp_std::prelude::*;
 #[cfg(test)]
 mod mock;
 
+mod benchmarking;
 #[cfg(test)]
 mod tests;
-
-#[cfg(feature = "runtime-benchmarks")]
-mod benchmarking;
 
 #[macro_use]
 mod helpers;
@@ -45,7 +43,6 @@ pub mod crypto {
 	}
 }
 
-pub type BalanceFor<T> = <T as pallet_balances::Config>::Balance;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -102,6 +99,28 @@ pub mod pallet {
 		type PublicSigning: From<Self::InternalPublic> + Into<Self::Public>;
 
 		type UnverifiedTransferLimit: Get<u32>;
+
+		type WeightInfo: WeightInfo;
+	}
+
+	pub trait WeightInfo {
+		//fn on_initialize() -> Weight;
+		//a,b,c,d
+		//fn on_finalize() -> Weight;
+		fn claim_legacy_wallet() -> Weight;
+		fn register_address(b: u32, e: u32) -> Weight;
+		//fn add_ask_order() -> Weight;
+		//fn add_bid_order() -> Weight;
+		//fn add_offer() -> Weight;
+		//fn add_deal_order() -> Weight;
+		//fn lock_deal_order() -> Weight;
+		//fn fund_deal_order() -> Weight;
+		//fn register_deal_order() -> Weight;
+		//fn close_deal_order() -> Weight;
+		//fn register_transfer() -> Weight;
+		//fn excempt() -> Weight;
+		//fn verify_transfer() -> Weight;
+		//fn add_authority() -> Weight;
 	}
 
 	#[pallet::pallet]
@@ -505,7 +524,7 @@ pub mod pallet {
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		/// Claims legacy wallet and transfers the balance to the sender's account.
-		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1, 1))]
+		#[pallet::weight(<T as Config>::WeightInfo::claim_legacy_wallet())]
 		pub fn claim_legacy_wallet(
 			origin: OriginFor<T>,
 			public_key: sp_core::ecdsa::Public,
@@ -522,6 +541,7 @@ pub mod pallet {
 			let legacy_keeper =
 				LegacyBalanceKeeper::<T>::get().ok_or(Error::<T>::LegacyBalanceKeeperMissing)?;
 
+			//bench worst case when source is reaped
 			<pallet_balances::Pallet<T> as Currency<T::AccountId>>::transfer(
 				&legacy_keeper,
 				&who,
@@ -531,11 +551,11 @@ pub mod pallet {
 			LegacyWallets::<T>::remove(&sighash);
 			Self::deposit_event(Event::<T>::LegacyWalletClaimed(who, sighash, legacy_balance));
 
-			Ok(PostDispatchInfo { actual_weight: None, pays_fee: Pays::No })
+			Ok(PostDispatchInfo { actual_weight: Some(<T as Config>::WeightInfo::claim_legacy_wallet()), pays_fee: Pays::No })
 		}
 
 		/// Registers an external address on `blockchain` and `network` with value `address`
-		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1, 1))]
+		#[pallet::weight(<T as Config>::WeightInfo::register_address(blockchain.as_bytes().len().unique_saturated_into(),(&address).as_slice().len().unique_saturated_into()))]
 		pub fn register_address(
 			origin: OriginFor<T>,
 			blockchain: Blockchain,
