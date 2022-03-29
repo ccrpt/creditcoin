@@ -1043,6 +1043,7 @@ dependencies = [
  "sp-std",
  "sp-transaction-pool",
  "sp-version",
+ "substrate-test-runtime-client",
  "substrate-wasm-builder",
 ]
 
@@ -3490,6 +3491,17 @@ dependencies = [
 
 [[package]]
 name = "memory-db"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de006e09d04fc301a5f7e817b75aa49801c4479a8af753764416b085337ddcc5"
+dependencies = [
+ "hash-db",
+ "hashbrown 0.11.2",
+ "parity-util-mem",
+]
+
+[[package]]
+name = "memory-db"
 version = "0.28.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d505169b746dacf02f7d14d8c80b34edfd8212159c63d23c977739a0d960c626"
@@ -3929,6 +3941,45 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-authorship"
+version = "4.0.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "impl-trait-for-tuples",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-authorship",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "pallet-babe"
+version = "4.0.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "log",
+ "pallet-authorship",
+ "pallet-session",
+ "pallet-timestamp",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-application-crypto",
+ "sp-consensus-babe",
+ "sp-consensus-vrf",
+ "sp-io",
+ "sp-runtime",
+ "sp-session",
+ "sp-staking",
+ "sp-std",
+]
+
+[[package]]
 name = "pallet-balances"
 version = "4.0.0-dev"
 source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
@@ -4019,6 +4070,27 @@ dependencies = [
  "sp-core",
  "sp-io",
  "sp-runtime",
+]
+
+[[package]]
+name = "pallet-session"
+version = "4.0.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "impl-trait-for-tuples",
+ "log",
+ "pallet-timestamp",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-session",
+ "sp-staking",
+ "sp-std",
+ "sp-trie",
 ]
 
 [[package]]
@@ -6216,6 +6288,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp-authorship"
+version = "4.0.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "async-trait",
+ "parity-scale-codec",
+ "sp-inherents",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "sp-block-builder"
 version = "4.0.0-dev"
 source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
@@ -6265,12 +6349,77 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp-consensus-aura"
+version = "0.10.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "async-trait",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-api",
+ "sp-application-crypto",
+ "sp-consensus",
+ "sp-consensus-slots",
+ "sp-inherents",
+ "sp-runtime",
+ "sp-std",
+ "sp-timestamp",
+]
+
+[[package]]
+name = "sp-consensus-babe"
+version = "0.10.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "async-trait",
+ "merlin",
+ "parity-scale-codec",
+ "scale-info",
+ "serde",
+ "sp-api",
+ "sp-application-crypto",
+ "sp-consensus",
+ "sp-consensus-slots",
+ "sp-consensus-vrf",
+ "sp-core",
+ "sp-inherents",
+ "sp-keystore",
+ "sp-runtime",
+ "sp-std",
+ "sp-timestamp",
+]
+
+[[package]]
 name = "sp-consensus-pow"
 version = "0.10.0-dev"
 source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
 dependencies = [
  "parity-scale-codec",
  "sp-api",
+ "sp-core",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "sp-consensus-slots"
+version = "0.10.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "parity-scale-codec",
+ "scale-info",
+ "serde",
+ "sp-arithmetic",
+ "sp-runtime",
+]
+
+[[package]]
+name = "sp-consensus-vrf"
+version = "0.10.0-dev"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "parity-scale-codec",
+ "schnorrkel",
  "sp-core",
  "sp-runtime",
  "sp-std",
@@ -6698,7 +6847,7 @@ version = "4.0.0"
 source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
 dependencies = [
  "hash-db",
- "memory-db",
+ "memory-db 0.28.0",
  "parity-scale-codec",
  "scale-info",
  "sp-core",
@@ -6900,6 +7049,93 @@ dependencies = [
  "log",
  "prometheus",
  "tokio",
+]
+
+[[package]]
+name = "substrate-test-client"
+version = "2.0.1"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "async-trait",
+ "futures 0.3.21",
+ "hex",
+ "parity-scale-codec",
+ "sc-client-api",
+ "sc-client-db",
+ "sc-consensus",
+ "sc-executor",
+ "sc-offchain",
+ "sc-service",
+ "serde",
+ "serde_json",
+ "sp-blockchain",
+ "sp-consensus",
+ "sp-core",
+ "sp-keyring",
+ "sp-keystore",
+ "sp-runtime",
+ "sp-state-machine",
+]
+
+[[package]]
+name = "substrate-test-runtime"
+version = "2.0.0"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "cfg-if 1.0.0",
+ "frame-support",
+ "frame-system",
+ "frame-system-rpc-runtime-api",
+ "log",
+ "memory-db 0.27.0",
+ "pallet-babe",
+ "pallet-timestamp",
+ "parity-scale-codec",
+ "parity-util-mem",
+ "sc-service",
+ "scale-info",
+ "serde",
+ "sp-api",
+ "sp-application-crypto",
+ "sp-block-builder",
+ "sp-consensus-aura",
+ "sp-consensus-babe",
+ "sp-core",
+ "sp-externalities",
+ "sp-finality-grandpa",
+ "sp-inherents",
+ "sp-io",
+ "sp-keyring",
+ "sp-offchain",
+ "sp-runtime",
+ "sp-runtime-interface",
+ "sp-session",
+ "sp-state-machine",
+ "sp-std",
+ "sp-transaction-pool",
+ "sp-trie",
+ "sp-version",
+ "substrate-wasm-builder",
+ "trie-db",
+]
+
+[[package]]
+name = "substrate-test-runtime-client"
+version = "2.0.0"
+source = "git+https://github.com/gluwa/substrate.git?rev=57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8#57cab2f30bcc5343771c8bc763dd6c9c9e10f0a8"
+dependencies = [
+ "futures 0.3.21",
+ "parity-scale-codec",
+ "sc-block-builder",
+ "sc-client-api",
+ "sc-consensus",
+ "sp-api",
+ "sp-blockchain",
+ "sp-consensus",
+ "sp-core",
+ "sp-runtime",
+ "substrate-test-client",
+ "substrate-test-runtime",
 ]
 
 [[package]]
