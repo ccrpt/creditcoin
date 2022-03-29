@@ -15,6 +15,45 @@ For more information, see [creditcoin.org](https://creditcoin.org), or read the 
 - [Using PolkadotJs](./docs/using-polkadotjs.md)
 - [PolkadotJs Example Project](./javascript)
 
+## Getting Started - Quick Version
+
+### Prerequisites
+
+- [Install Docker](https://docs.docker.com/engine/install/)
+- [Install Docker Compose on Linux](https://docs.docker.com/compose/cli-command/#install-on-linux)
+
+### Step 1
+
+Download this repository.
+
+### Step 2
+
+Replace the variables in the '.env' file with yours.
+
+```
+external_port=30333
+local_port=30333
+public_ipv4_address=<your ip address>
+nodename=<your node name>
+SS58Address=<your SS58 mining key>
+path_to_data=<path to data folder you created>
+```
+
+### Step 3
+
+Run with docker-compose.
+
+```
+sudo docker-compose up
+```
+
+### When you need to turn off the running node
+
+
+```
+sudo docker-compose down
+```
+
 ## Developer Setup
 
 ### Rust Setup
