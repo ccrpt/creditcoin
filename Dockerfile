@@ -1,4 +1,4 @@
-FROM gluwa/ci-linux:production AS builder
+FROM ccrpt/ci-linux:latest AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 RUN source ~/.cargo/env && rustup default stable && rustup update nightly && rustup update stable && rustup target add wasm32-unknown-unknown --toolchain nightly
 WORKDIR /creditcoin-node
